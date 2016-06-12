@@ -1,12 +1,16 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+ofstream output;
+ifstream input;
+
+class PolyNode;
+class PolyList;
 
 class PolyTerm{
     
     int coe;
     int deg;
-    
     
 public:
     PolyTerm(int coefficient, int degree){
@@ -14,9 +18,6 @@ public:
         this->deg = degree;
     }
     
-    void canonicalize(){
-        
-    }
     
     int getDeg(){
         return deg;
@@ -78,6 +79,16 @@ public:
         cout<<NodeParam->coe<<" --- " << NodeParam->deg<<" | ";
         length++;
         
+    }
+    
+    void canonicalize(){
+        PolyNode * temp = listHead;
+        cout<<"\Canonicalize List: \n";
+//        while(temp->next!=NULL){
+//            if(){
+//            }
+//            temp = temp->next;
+//        }
         
     }
 
@@ -86,7 +97,7 @@ public:
         PolyNode * temp = listHead;
         cout<<"\nPrinting List: \n";
         while(temp->next!=NULL){
-            cout<<"Coe:" <<temp->coe<< " Deg:" << temp->deg<< " --> ";
+            cout<<"(" <<temp->coe<< ":" << temp->deg<< ") --> ";
             temp = temp->next;
         }
         //cout<<"temp.Coef: "<<temp->coe<< " "<<endl;
@@ -102,29 +113,43 @@ public:
 
 
 int main(int argc, char* argv[]) {
+
+    int coefficient;
+    int degree;
+    input.open(argv[1]);
+    output.open(argv[2]);
+    
+    
+    
     
 //    PolyList eq0 = *new PolyList();    
 //    eq1.append(*new PolyNode(2, 3));
     
     PolyList * eq1 = new PolyList();
     
-    PolyNode *node1 = new PolyNode(2,5);
-    PolyNode *node2 = new PolyNode(2,4);
-    
-    PolyNode *node3;
-    node3 = new PolyNode(8, 2);
+//    PolyNode *node1 = new PolyNode(2,5);
+//    PolyNode *node2 = new PolyNode(2,4);
 
-    eq1->append(node1);
-    eq1->append(node2);
-    eq1->append(node3);
+//    PolyNode *node3;
+//    node3 = new PolyNode(8, 2);
+
+//    eq1->append(node1);
+//    eq1->append(node2);
+//    eq1->append(node3);
+    
+    cout<<"\nfile data\n";
+    while(input>>coefficient>>degree){
+        cout<<"+("<<coefficient<<"x^"<<degree<<")";
+        PolyNode *node = new PolyNode(coefficient,degree);
+        eq1->append(node);
+    }
+    cout<<endl;
     
     eq1->printList();
     
     
-    
-    
-    
-    
+    input.close();
+    output.close();
     
     return 0; };
 
