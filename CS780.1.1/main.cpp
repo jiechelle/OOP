@@ -23,6 +23,7 @@ public:
         return deg;
     }
     
+    
     int getCoe(){
         return coe;
     }
@@ -72,38 +73,68 @@ public:
     }
     
     
-    void append(PolyNode *NodeParam){
-    
-        NodeParam->next = current->next;
-        current->next = NodeParam;
-        cout<<NodeParam->coe<<" --- " << NodeParam->deg<<" | ";
-        length++;
+    PolyNode * findspot(PolyNode *item){
+        PolyNode * spot = listHead;
         
+        while((spot->next!=NULL) && (spot->next->deg>= item->deg)){
+            
+            if(spot->next->deg == item->deg){
+                int coe=(spot->next->coe)+(item->coe);
+                //int deg=(spot->next->deg)+(item->deg);
+                PolyNode * combo = new PolyNode(coe,spot->next->deg);
+                cout<<"SPOTis"<<spot->coe<<" : "<<spot->deg<<" ";
+                
+                combo->next = spot->next->next;
+                spot->next = combo;
+                cout<<"There is a COMBO!: ("<<combo->coe<<":"<<combo->deg<<") \n";
+                printList();
+                
+                break;
+            }//if same degree
+            else{
+                spot = spot->next;
+            }
+            
+        }//while
+    
+        return spot;
     }
     
-    void canonicalize(){
-        PolyNode * temp = listHead;
-        cout<<"\Canonicalize List: \n";
-//        while(temp->next!=NULL){
-//            if(){
-//            }
-//            temp = temp->next;
-//        }
+    
+    
+    void canonicalize(PolyNode* item){
+        cout<<"\nCanonicalizing "<<item->coe<<":"<<item->deg<<endl;
+        PolyNode * spot = findspot(item);
+    
+        item->next = spot->next;
+        spot->next = item;
+        length++;
+        
+//        cout<<" Inserted "<<item->coe<<":"<<item->deg<<" ";
+        
+     
+        
         
     }
 
     
     void printList(){
-        PolyNode * temp = listHead;
-        cout<<"\nPrinting List: \n";
-        while(temp->next!=NULL){
-            cout<<"(" <<temp->coe<< ":" << temp->deg<< ") --> ";
+        PolyNode * temp = listHead->next;
+        //        cout<<"\nLINKED LIST: \n";
+        while(temp!=NULL){
+            if(temp->next==NULL){
+                cout<<" " <<temp->coe<< "x^" << temp->deg<< "\n";
+            }else{
+                cout<<" " <<temp->coe<< "x^" << temp->deg<< " + ";
+                
+            }
             temp = temp->next;
         }
         //cout<<"temp.Coef: "<<temp->coe<< " "<<endl;
-        cout<<"\nlist length: "<<length<<endl;
+        cout<<"list length: "<<length<<endl;
     }
-    
+
+
     
     
 };
@@ -119,33 +150,27 @@ int main(int argc, char* argv[]) {
     input.open(argv[1]);
     output.open(argv[2]);
     
-    
-    
-    
-//    PolyList eq0 = *new PolyList();    
-//    eq1.append(*new PolyNode(2, 3));
+
     
     PolyList * eq1 = new PolyList();
     
-//    PolyNode *node1 = new PolyNode(2,5);
-//    PolyNode *node2 = new PolyNode(2,4);
-
-//    PolyNode *node3;
-//    node3 = new PolyNode(8, 2);
-
-//    eq1->append(node1);
-//    eq1->append(node2);
-//    eq1->append(node3);
     
-    cout<<"\nfile data\n";
+    cout<<"File data\n";
     while(input>>coefficient>>degree){
-        cout<<"+("<<coefficient<<"x^"<<degree<<")";
+        eq1->printList();
         PolyNode *node = new PolyNode(coefficient,degree);
-        eq1->append(node);
+        eq1->canonicalize(node);
+        
     }
     cout<<endl;
     
+
     eq1->printList();
+    
+    
+    
+    
+    
     
     
     input.close();
